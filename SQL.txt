@@ -1,0 +1,96 @@
+CREATE TABLE 部材種別マスター(
+id serial NOT NULL PRIMARY KEY,
+buzai_syubetsu_sum varchar(4),
+buzai_syubetsu_nm varchar(255),
+buzai_image_file varchar(255),
+buzai_comment varchar(255),
+unuse_flag boolean
+);
+
+INSERT INTO 部材種別マスター VALUES (1,'EBPP','ベント曲げ','c:/','ベント曲げ用データ','FALSE');
+INSERT INTO 部材種別マスター VALUES (2,'ESPP','直管','c:/','直管用データ','FALSE');
+INSERT INTO 部材種別マスター VALUES (3,'LPRM','レジューサー','c:/','レジューサー用データ','FALSE');
+
+
+
+
+CREATE TABLE 項目マスター(
+id serial NOT NULL PRIMARY KEY,
+buzai_syubetsu_id serial,
+field_order integer,
+output_order integer,
+field_nm varchar(255),
+field_title varchar(255),
+field_type varchar(255),
+field_query varchar(255),
+field_length varchar(255),
+field_unit varchar(255),
+unvisible_flag boolean,
+unuse_flag boolean
+);
+
+
+
+INSERT INTO 項目マスター
+   (id,buzai_syubetsu_id,field_order,output_order,field_nm,field_title,field_type,field_query,field_length,field_unit,unvisible_flag,unuse_flag)
+VALUES
+   (1,1,1,1,'nominal_diameter','呼び径','double','','10','mm','TRUE','FALSE'),
+   (2,1,2,2,'parts_series','部材系列','double','','10','mm','TRUE','FALSE'),
+   (3,1,3,3,'schedule','SCH','varchar(12)','','10','mm','TRUE','FALSE'),
+   (4,1,4,4,'material_type','材料種別','varchar(12)','','10','mm','TRUE','FALSE'),
+   (5,1,5,5,'seam','シーム','varchar(12)','','10','mm','TRUE','FALSE'),
+   (6,1,6,6,'piping_length','管長','double','','10','mm','TRUE','FALSE'),
+   (7,2,1,1,'nominal_diameter','呼び径','double','','10','mm','TRUE','FALSE'),
+   (8,2,2,2,'parts_series','部材系列','double','','10','mm','TRUE','FALSE'),
+   (9,2,3,3,'schedule','SCH','varchar(12)','','10','mm','TRUE','FALSE'),
+   (10,2,4,4,'material_type','材料種別','varchar(12)','','10','mm','TRUE','FALSE'),
+   (11,2,5,5,'seam','シーム','varchar(12)','','10','mm','TRUE','FALSE'),
+   (12,2,6,6,'Piping_length','管長','double','','10','mm','TRUE','FALSE'),
+   (13,3,1,1,'nominal_diameter','呼び径','double','','10','mm','TRUE','FALSE'),
+   (14,3,2,2,'parts_series','部材系列','double','','10','mm','TRUE','FALSE'),
+   (15,3,3,3,'schedule','SCH','varchar(12)','','10','mm','TRUE','FALSE'),
+   (16,3,4,4,'material_type','材料種別','varchar(12)','','10','mm','TRUE','FALSE'),
+   (17,3,5,5,'small_caliber','小口径','double','','10','mm','TRUE','FALSE');
+
+
+
+CREATE TABLE EBPP(
+ nominal_diameter double precision,
+ parts_series double precision,
+ SCH double precision,
+ material_type varchar(10),
+ seam varchar(10),
+ piping_length double precision
+ );
+
+
+CREATE TABLE ESPP(
+ nominal_diameter double precision,
+ parts_series double precision,
+ SCH double precision,
+ material_type varchar(10),
+ seam varchar(10),
+ piping_length double precision
+ );
+
+CREATE TABLE LPRM(
+ nominal_diameter double precision,
+ parts_series double precision,
+ SCH double precision,
+ material_type varchar(10),
+ small_caliber double precision
+ );
+
+
+
+----------WHEREで絞り込み--------
+
+SELECT * FROM 項目マスター INNER JOIN 部材種別マスター ON 項目マスター.buzai_syubetsu_id = 部材種別マスター.id
+
+SELECT field_order,field_title,buzai_syubetsu_sum FROM 項目マスター,部材種別マスター WHERE 部材種別マスター.id = 項目マスター.buzai_syubetsu_id;
+
+SELECT field_order,field_title,buzai_syubetsu_sum FROM 項目マスター INNER JOIN 部材種別マスター ON 部材種別マスター.id = 項目マスター.buzai_syubetsu_id;
+
+
+----------カラム名取得-----------
+select column_name from information_schema.columns WHERE table_name = 'ebpp'
