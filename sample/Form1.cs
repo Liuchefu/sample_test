@@ -20,7 +20,7 @@ namespace sample
             InitializeComponent();
         }
 
-        //初期設定---コンボボックスに部材種別マスターの部材種別名を格納する
+        //初期設定
         private void Init_Load(object sender, EventArgs e)
         {
             StringBuilder Setuzoku = new StringBuilder();
@@ -33,6 +33,7 @@ namespace sample
             var buzai_name_list = new List<string>();
             int buzai_syubetsu_num;
 
+            //コンボボックスに部材種別マスターの部材種別名を格納する
             using (var con = new NpgsqlConnection(connString))
             {
                 con.Open();
@@ -67,7 +68,7 @@ namespace sample
 
             string connString = Setuzoku.ToString();
             var buzai_name_list = new List<string>();
-            var Column_list = new List<string>();
+            var record_list = new List<string>();
             var Column_name_list = new List<string>();
             int buzai_syubetsu_num = 0;
 
@@ -87,13 +88,10 @@ namespace sample
                     }
                 }
 
-                //string sql = @"SELECT field_title FROM 項目マスター INNER JOIN 部材種別マスター ON 部材種別マスター.id = 項目マスター.buzai_syubetsu_id AND 項目マスター.buzai_syubetsu_id = :buzai_syubetsu_num";
                 string sql = $"SELECT field_title FROM 項目マスター INNER JOIN 部材種別マスター ON 部材種別マスター.id = 項目マスター.buzai_syubetsu_id AND 項目マスター.buzai_syubetsu_id = {buzai_syubetsu_num}";
 
                 using (var cmd = new NpgsqlCommand(sql, con))
                 {
-                    //sql文に変数を埋め込む方法
-                    //cmd.Parameters.Add(new NpgsqlParameter("buzai_syubetsu_num", buzai_syubetsu_num));
                     using (var dataReader = cmd.ExecuteReader())
                     { //取得処理実施
 
@@ -119,7 +117,7 @@ namespace sample
                 using (var cmd = new NpgsqlCommand(sql, con))
                 {
                     using (var dataReader = cmd.ExecuteReader())
-                    { //取得処理実施
+                    { //colum_name_listsにカラム名の格納
                         while (dataReader.Read())
                         {
                             colum_name_lists.AddRange(new List<string>() { (dataReader["column_name"].ToString()) });
@@ -127,31 +125,33 @@ namespace sample
                     }                    
                 }
 
+
                 sql = $"SELECT * FROM {comboBox1.GetValue()}";
+
                 using (var cmd = new NpgsqlCommand(sql, con))
                 {
                     using (var dataReader = cmd.ExecuteReader())
                     {
-
                         while (dataReader.Read())
                         {
                             foreach(string i in colum_name_lists )
                             {
-                                Column_list.AddRange(new List<string>() { dataReader[i].ToString() });
+                                //record_listにテーブルのレコード格納
+                                record_list.AddRange(new List<string>() { dataReader[i].ToString() });
                             }
                         }
 
                         dataGridView1.ColumnCount = Column_name_list.Count();
-                        dataGridView1.RowCount = Column_list.Count() / Column_name_list.Count();
-                        int table_records_number = Column_list.Count() / Column_name_list.Count();
-                        int column_list_num = 0;
+                        dataGridView1.RowCount = record_list.Count() / Column_name_list.Count();
+                        int table_records_number = record_list.Count() / Column_name_list.Count();　
+                        int record_list_num = 0;
 
                         for (int i = 0; i < table_records_number; i++)
                         {
                             for (int j = 0; j < Column_name_list.Count(); j++)
                             {
-                                dataGridView1.Rows[i].Cells[j].Value = Column_list[column_list_num];
-                                column_list_num += 1;
+                                dataGridView1.Rows[i].Cells[j].Value = record_list[record_list_num];
+                                record_list_num += 1;
                             }
                         }
                     }
