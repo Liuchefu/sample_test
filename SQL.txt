@@ -7,6 +7,8 @@ buzai_comment varchar(255),
 unuse_flag boolean
 );
 
+
+
 INSERT INTO 部材種別マスター VALUES (1,'EBPP','ベント曲げ','c:/','ベント曲げ用データ','FALSE');
 INSERT INTO 部材種別マスター VALUES (2,'ESPP','直管','c:/','直管用データ','FALSE');
 INSERT INTO 部材種別マスター VALUES (3,'LPRM','レジューサー','c:/','レジューサー用データ','FALSE');
@@ -64,6 +66,7 @@ CREATE TABLE EBPP(
  );
 
 
+
 CREATE TABLE ESPP(
  nominal_diameter double precision,
  parts_series double precision,
@@ -81,6 +84,11 @@ CREATE TABLE LPRM(
  small_caliber double precision
  );
 
+--------------------------------------------------------------------------------------------------------------
+
+
+
+
 
 
 ----------WHEREで絞り込み--------
@@ -93,4 +101,4 @@ SELECT field_order,field_title,buzai_syubetsu_sum FROM 項目マスター INNER 
 
 
 ----------カラム名取得-----------
-select column_name from information_schema.columns WHERE table_name = 'ebpp'
+ SELECT column_name from information_schema.columns WHERE table_name = 'ebpp' ORDER BY ordinal_position;
